@@ -41,6 +41,10 @@ SELECT first_name, salary
 FROM employees
 WHERE upper(first_name) LIKE upper('%Ja%');
 
+SELECT first_name, salary
+FROM employees
+WHERE lower(first_name) LIKE lower('%Ja%');
+
 --문자의 길이를 리턴해주는 함수이다.
 SELECT length('korea')
 FROM dual;
