@@ -355,7 +355,7 @@ BEGIN
     SET deptno=50
     WHERE deptno=20;
 END;
-
+/
 --dept01에 있는 deptno=20을 deptno=50으로 수정
 UPDATE dept01
 SET deptno=50
