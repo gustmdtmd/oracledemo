@@ -202,10 +202,15 @@ ORDER BY w.employee_id;
 /*-------------------------------------------------------
 USING
 -------------------------------------------------------*/
-SELECT dept.department_id, emp.first_name, emp.job_id, dept.department_name
-FROM employees emp inner join departments dept
+SELECT department_id, first_name, job_id, department_name
+FROM employees inner join departments USING(department_id)
 --ON emp.department_id = dept.department_id
-WHERE dept.department_id = 30;
+WHERE department_id = 30;
+
+
+
+
+
 
 
 

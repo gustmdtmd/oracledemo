@@ -6,6 +6,14 @@ SELECT d.department_id, l.city
 FROM departments d, locations l
 WHERE d.location_id = l.location_id
  AND d.department_id = 60;
+ 
+SELECT city
+FROM locations
+WHERE location_id = (
+                    SELECT location_id
+                    FROM departments
+                    WHERE department_id = 60
+                    );
     
 --2)사번이 107인 사원과 부서가같고,167번의 급여보다 많은 사원들의 사번,이름(first_name),급여를 출력하시오.
 SELECT employee_id, first_name, salary
@@ -33,13 +41,25 @@ WHERE department_id = (
 --4)각 부서의 최소급여가 20번 부서의 최소급여보다 많은 부서의 번호와 그부서의 최소급여를 출력하시오.
  SELECT department_id, min(salary)
  FROM employees
- WHERE salary > (
+ GROUP BY department_id
+ HAVING min(salary) > (
                      SELECT min(salary)
                      FROM employees
                      WHERE department_id = 20
                     )
-GROUP BY department_id
 ORDER BY min(salary);
+
+SELECT department_id, min(salary)
+FROM employees
+GROUP BY department_id
+HAVING min(salary) > (SELECT min(salary)
+                      FROM employees
+                      GROUP BY department_id
+                      HAVING department_id = 20)
+--HAVING min(salary) >ANY ( SELECT salary
+--                          FROM employees
+--                          WHERE department_id = 20)
+ORDER BY  department_id;
     
 --5) 사원번호가 177인 사원과 담당 업무가 같은 사원의 사원이름(first_name)과 담당업무(job_id)하시오.   
 SELECT first_name, job_id
@@ -56,21 +76,18 @@ FROM employees
 WHERE salary = (
                 SELECT min(salary)
                 FROM employees
-                )
-GROUP BY first_name, job_id, salary;
+                );
 				
 --7)업무별 평균 급여가 가장 적은  업무(job_id)를 찾아 업무(job_id)와 평균 급여를 표시하시오.
-SELECT job_id, min(salary)
+SELECT job_id, avg(salary)
 FROM employees
-WHERE (job_id,salary) IN (
-                             SELECT job_id,avg(salary)
-                             FROM employees
-                             GROUP BY job_id
-            )
-GROUP BY job_id, salary;
+GROUP BY job_id
+HAVING avg(salary) =(
+                SELECT min(avg(salary))
+                FROM employees
+                GROUP BY job_id
+                );
 
-SELECT job_id
-FROM employees;
 --8) 각 부서의 최소 급여를 받는 사원의 이름(first_name), 급여(salary), 부서번호(department_id)를 표시하시오.
 SELECT first_name, salary, department_id
 FROM employees
@@ -86,14 +103,28 @@ ORDER BY department_id;
 --담당 업무(job_id), 급여(salary))를 출력하시오.
 SELECT employee_id, first_name, job_id, salary
 FROM employees
-WHERE salary < (
-                SELECT min(salary)
+WHERE salary < ALL (
+                SELECT salary
                 FROM employees
                 WHERE job_id = 'IT_PROG'
                 )
 AND job_id != 'IT_PROG';
 
-
+SELECT employee_id, first_name, job_id, salary
+FROM employees
+WHERE salary <ALL (SELECT salary
+                   FROM employees
+                   WHERE job_id = 'IT_PROG')
+ AND job_id <> 'IT_PROG'; 
 --10)부하직원이 없는 모든 사원의 이름을 표시하시오.
-SELECT first_name, manager_id
-FROM employees ;
+SELECT employee_id, first_name
+FROM employees 
+WHERE employee_id NOT IN (
+                        SELECT e.employee_id
+                        FROM employees e, employees m
+                        WHERE e.employee_id=m.manager_id
+                        )
+ORDER BY employee_id;
+
+
+
