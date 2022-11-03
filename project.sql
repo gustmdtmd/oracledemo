@@ -15,3 +15,5 @@
 --삽입
  INSERT INTO book(num, title, author)
  VALUES(book_num_seq.nextval, '홍길동전', '허균');
+ 
+ SELECT * FROM book;
