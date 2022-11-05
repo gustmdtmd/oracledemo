@@ -17,3 +17,5 @@
  VALUES(book_num_seq.nextval, '홍길동전', '허균');
  
  SELECT * FROM book;
+ 
+ commit;
