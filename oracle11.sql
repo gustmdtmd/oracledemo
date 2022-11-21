@@ -21,7 +21,8 @@ CREATE SEQUENCE mem_num_seq
 INSERT INTO mem(num, name, age, loc)
 VALUES(mem_num_seq.nextval, '홍길동', 30, '서울');
 
-SELECT * FROM mem;
+SELECT * FROM mem
+ORDER BY num DESC;
 
 commit;
 
